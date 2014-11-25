@@ -122,13 +122,7 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
         $case = false;
         
         if (isset($this->_request['orderId'])) {
-            $cases = Mage::getModel('signifyd_connect/case')->getCollection();
-            $cases->addFieldToFilter('order_increment', $this->_request['orderId']);
-            
-            foreach ($cases as $c) {
-                $case = $c;
-                break;
-            }
+            $case = Mage::getModel('signifyd_connect/case')->load($request['orderId'], 'order_increment');
         }
         
         /*
@@ -372,26 +366,7 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
         $this->_topic = "cases/review"; // Topic header is most likely not available
         
         if (is_array($request) && isset($request['orderId'])) {
-            $cases = Mage::getModel('signifyd_connect/case')->getCollection();
-            $cases->addFieldToFilter('order_increment', $request['orderId']);
-            
-            foreach ($cases as $case) {
-                $this->_case = $case;
-                break;
-            }
-            
-            /*
-            // Do not create cases if not found -- potential concurrency issues
-            if (!$this->_case && isset($request['investigationId'])) {
-                $case = Mage::getModel('signifyd_connect/case');
-                $case->setOrderIncrement($request['orderId']);
-                $case->setCode($request['investigationId']);
-                $case->setCreated(strftime('%Y-%m-%d %H:%M:%S', time()));
-                $case->setUpdated(strftime('%Y-%m-%d %H:%M:%S', time()));
-                
-                $this->_case = $case;
-            }
-            */
+            $this->_case = Mage::getModel('signifyd_connect/case')->load($request['orderId'], 'order_increment');
         }
         
         $this->_order = Mage::getModel('sales/order')->loadByIncrementId($this->_request['orderId']);

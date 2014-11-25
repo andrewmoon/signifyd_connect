@@ -17,12 +17,10 @@ class Signifyd_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     
     public function getCaseUrl($order_id)
     {
-        $collection = Mage::getModel('signifyd_connect/case')->getCollection()->addFieldToFilter('order_increment', $order_id);
+        $case = Mage::getModel('signifyd_connect/case')->load($order_id, 'order_increment');
         
-        foreach ($collection as $case) {
-            if ($case->getCode()) {
-                return "https://www.signifyd.com/cases/" . $case->getCode();
-            }
+        if ($case && $case->getCode()) {
+            return "https://www.signifyd.com/cases/" . $case->getCode();
         }
     }
     
@@ -58,9 +56,9 @@ class Signifyd_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     
     public function isProcessed($order)
     {
-        $collection = Mage::getModel('signifyd_connect/case')->getCollection()->addFieldToFilter('order_increment', $order->getIncrementId());
+        $case = Mage::getModel('signifyd_connect/case')->load($order->getIncrementId(), 'order_increment');
         
-        if (count($collection)) {
+        if ($case && $case->getId()) {
             return true;
         }
         
@@ -85,9 +83,9 @@ class Signifyd_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     
     public function unmarkProcessed($order)
     {
-        $collection = Mage::getModel('signifyd_connect/case')->getCollection()->addFieldToFilter('order_increment', $order->getIncrementId());
+        $case = Mage::getModel('signifyd_connect/case')->load($order->getIncrementId(), 'order_increment');
         
-        foreach ($collection as $case) {
+        if ($case && $case->getId()) {
             $case->delete();
         }
     }
