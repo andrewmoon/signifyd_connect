@@ -390,6 +390,15 @@ class Signifyd_Connect_Model_Observer extends Varien_Object
         return false;
     }
     
+    public function delay()
+    {
+        $delay = Mage::getStoreConfig('signifyd_connect/advanced/delay');
+        
+        if ($delay && is_int($delay)) {
+            sleep($delay);
+        }
+    }
+    
     public function openCase($observer)
     {
         try {
@@ -452,18 +461,22 @@ class Signifyd_Connect_Model_Observer extends Varien_Object
                 
                 $case_object = Mage::helper('signifyd_connect')->markProcessed($order);
                 
+                $this->delay();
+                
                 $response = $this->submitCase($case);
                 
                 try {
-                    $response_code = $response->getHttpCode();
-            
-                    if (substr($response_code, 0, 1) == '2') {
-                        $response_data = json_decode($response->getRawResponse(), true);
-                        
-                        $case_object = Mage::getModel('signifyd_connect/case')->load($case_object->getId());
-                        $case_object->setUpdated(strftime('%Y-%m-%d %H:%M:%S', time()));
-                        $case_object->setCode($response_data['investigationId']);
-                        $case_object->save();
+                    if (Mage::getStoreConfig('signifyd_connect/advanced/fallback')) {
+                        $response_code = $response->getHttpCode();
+                
+                        if (substr($response_code, 0, 1) == '2') {
+                            $response_data = json_decode($response->getRawResponse(), true);
+                            
+                            $case_object = Mage::getModel('signifyd_connect/case')->load($case_object->getId());
+                            $case_object->setUpdated(strftime('%Y-%m-%d %H:%M:%S', time()));
+                            $case_object->setCode($response_data['investigationId']);
+                            $case_object->save();
+                        }
                     }
                 } catch (Exception $e) {
                     

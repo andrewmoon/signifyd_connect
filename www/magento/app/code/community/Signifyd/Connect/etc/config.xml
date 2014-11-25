@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Signifyd_Connect>
-            <version>3.4.8</version>
+            <version>3.4.9</version>
         </Signifyd_Connect>
     </modules>
     <global>
@@ -82,6 +82,8 @@
             </settings>
             <advanced>
                 <retrieve_score>0</retrieve_score>
+                <delay>0</delay>
+                <fallback>0</fallback>
                 <show_scores>0</show_scores>
                 <hold_orders>0</hold_orders>
                 <hold_orders_threshold>500</hold_orders_threshold>

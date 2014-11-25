@@ -476,7 +476,13 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
                     Mage::log('API request failed auth', null, 'signifyd_connect.log');
                 }
                 
-                $this->processFallback($request);
+                if (Mage::getStoreConfig('signifyd_connect/advanced/fallback')) {
+                    $this->processFallback($request);
+                } else {
+                    Mage::helper('core/http')->authFailed();
+                    
+                    return;
+                }
             }
         } else {
             echo $this->getDefaultMessage();
