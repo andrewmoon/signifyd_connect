@@ -373,7 +373,7 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
             $this->_case = Mage::getModel('signifyd_connect/case')->load($request['orderId'], 'order_increment');
         }
         
-        $this->_order = Mage::getModel('sales/order')->loadByIncrementId($this->_request['orderId']);
+        $this->_order = Mage::getModel('sales/order')->loadByIncrementId($request['orderId']);
         
         if ($this->_order && $this->_order->getId()) {
             $this->_store_id = $this->_order->getStoreId();
