@@ -263,6 +263,10 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
             }
         }
         
+        if (isset($this->_request['investigationId'])) {
+            $case->setCode($this->_request['investigationId']);
+        }
+        
         if (isset($this->_request['status'])) {
             $case->setSignifydStatus($this->_request['status']);
             
@@ -305,6 +309,10 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
             if ($this->logRequest()) {
                 Mage::log('No score value available', null, 'signifyd_connect.log');
             }
+        }
+        
+        if (isset($this->_request['investigationId'])) {
+            $case->setCode($this->_request['investigationId']);
         }
         
         if (isset($this->_request['status'])) {
