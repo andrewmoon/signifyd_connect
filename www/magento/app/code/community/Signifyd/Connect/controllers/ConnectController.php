@@ -122,7 +122,11 @@ class Signifyd_Connect_ConnectController extends Mage_Core_Controller_Front_Acti
         $case = false;
         
         if (isset($this->_request['orderId'])) {
-            $case = Mage::getModel('signifyd_connect/case')->load($request['orderId'], 'order_increment');
+            $c = Mage::getModel('signifyd_connect/case')->load($order_increment, 'order_increment');
+            
+            if ($c && $c->getId()) {
+                $case = $c;
+            }
         }
         
         /*
